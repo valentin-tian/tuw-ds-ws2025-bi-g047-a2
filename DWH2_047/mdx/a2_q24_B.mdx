@@ -1,0 +1,13 @@
+-- 24. For parameter CO2, show P95 Recorded Value by Country for 2024. Return Countries on rows and one column with P95 Recorded Value for the year 2024.
+
+SELECT
+  { [Measures].[P95 Recorded Value] } ON COLUMNS,
+        NONEMPTY(
+            [dim_city].[Geo].[country_name].Members,
+            [Measures].[P95 Recorded Value]
+        ) ON ROWS
+FROM [AirQ Cube]
+WHERE (
+    [dim_timemonth].[Time].[year_num].&[2024],
+    [dim_param].[Param].[param_name].&[CO2]
+)

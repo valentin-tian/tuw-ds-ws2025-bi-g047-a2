@@ -1,0 +1,17 @@
+-- 28. For 2024, list the Top 10 Countries by Missing Days. 
+-- Return the 10 countries with the highest totals on rows (highest → lowest) and one column with Missing Days for 2024.
+
+WITH
+MEMBER [Measures].[Missing_days_2024] AS
+    ([Measures].[Missing Days], [dim_timemonth].[Time].[year_num].&[2024])
+
+SELECT
+  { [Measures].[Missing_days_2024] } ON COLUMNS,
+  TOPCOUNT(
+      FILTER(
+          [dim_city].[Geo].[country_name].Members,
+          [Measures].[Missing Days] > 0
+      ), 10,
+      [Measures].[Missing_days_2024]
+  ) ON ROWS
+FROM [AirQ Cube]

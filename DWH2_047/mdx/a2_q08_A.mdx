@@ -1,0 +1,16 @@
+-- 08. For 2024, show Avg Data Quality by Country, but only for countries whose 2024 year-total Devices Reporting is at least 2000. 
+-- Return Countries on rows (filtered to Devices Reporting >= 2000) and one column with Avg Data Quality for the year 2024.
+
+WITH
+MEMBER [Measures].[Avg_data_quality_2024] AS
+    ([Measures].[Avg Data Quality], [dim_timemonth].[Time].[year_num].&[2024])
+
+SELECT
+  { [Measures].[Avg_data_quality_2024] } ON COLUMNS,
+  FILTER(
+    [dim_city].[Geo].[country_name].Members,
+    ([Measures].[Devices Reporting], 
+     [dim_timemonth].[Time].[year_num].&[2024], 
+     [dim_city].[Geo].CurrentMember) >= 2000
+  ) ON ROWS
+FROM [AirQ Cube]

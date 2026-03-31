@@ -1,0 +1,15 @@
+-- 6. For 2024, list the Top 10 Cities by total Missing Days (all parameters). Return the 10 cities with the highest totals on rows (highest . lowest) and one column with the 2024 total Missing Days.
+
+SELECT
+  { [Measures].[Missing Days] } ON COLUMNS,
+    TOPCOUNT(
+        NONEMPTY(
+            [dim_city].[Geo].[city_name].Members,
+            [Measures].[Missing Days]
+        ),
+        10, [Measures].[Missing Days]
+    ) ON ROWS
+FROM [AirQ Cube]
+WHERE (
+    [dim_timemonth].[Time].[year_num].&[2024]
+)

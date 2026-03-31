@@ -1,0 +1,16 @@
+-- 19. For 2024, show Missing Days and Data Volume (KB) totals by City in Central Europe. Return Cities in Central Europe on rows and two columns - Missing Days and Data Volume (KB) - for the year 2024.
+
+SELECT
+    { [Measures].[Missing Days],
+        [Measures].[Data Volume (KB)] } ON COLUMNS,
+    NONEMPTY(
+        DESCENDANTS(
+            [dim_city].[Geo].[region_name].&[Central Europe],
+            [dim_city].[Geo].[city_name]
+        ),
+        [Measures].[Missing Days]
+    ) ON ROWS
+FROM [AirQ Cube]
+WHERE (
+    [dim_timemonth].[Time].[year_num].&[2024]
+)

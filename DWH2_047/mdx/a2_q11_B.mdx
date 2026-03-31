@@ -1,0 +1,20 @@
+-- 11. For 2024, show Exceed Days (any) by Region for Param Category = ‘Gas’. Return Regions on rows and one column with Exceed Days (any) for the year 2024, filtered to Category = Gas.
+
+WITH
+MEMBER [Measures].[ExceedDays_Gas] AS
+SUM(
+    FILTER(
+        [dim_param].[Param].[param_name].Members,
+        [dim_param].[Param].CurrentMember.Parent.Name = "Gas"
+    ),
+    [Measures].[Exceed Days (any)]
+)
+
+SELECT
+  { [Measures].[ExceedDays_Gas] } ON COLUMNS,
+  NONEMPTY(
+      [dim_city].[Geo].[region_name].Members,
+      [Measures].[ExceedDays_Gas]
+  ) ON ROWS
+FROM [AirQ Cube]
+WHERE [dim_timemonth].[Time].[year_num].&[2024]
